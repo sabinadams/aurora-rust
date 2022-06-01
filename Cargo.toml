@@ -1,0 +1,12 @@
+[package]
+name = "aurora-rust"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+datamodel = { git = "https://github.com/prisma/prisma-engines" }
+serde_json = "1.0.78"
+serde = { version = "1.0.136", features = ["derive"] }
+glob = "0.3.0"

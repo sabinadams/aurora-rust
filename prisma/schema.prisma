@@ -1,0 +1,14 @@
+generator js {
+    provider        = "prisma-client-js"
+    previewFeatures = ["extendedIndexes"]
+}
+
+datasource db {
+    provider = "mysql"
+    url      = "mysql://"
+}
+
+model Post {
+    id      String @id @map("_id")
+    content Json   @default("{}") @db.Json
+}
