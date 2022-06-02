@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::from_str;
 use std::fs::read_to_string;
 use std::io;
-
+use crate::util;
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AuroraConfig {
     pub files: Vec<String>,
@@ -47,10 +47,17 @@ pub fn read_all_schemas(paths: Vec<String>) -> Vec<String> {
             std::process::exit(0)
         }) {
             if let Ok(path) = entry {
-                schemas.push(read_to_string(path.clone()).unwrap_or_else(|_err| {
+                let schema = read_to_string(path.clone()).unwrap_or_else(|_err| {
                     eprintln!("Could not read the schema at {}", path.display());
                     std::process::exit(0)
-                }))
+                });
+                match util::datamodel::validate_schema(schema.clone()) {
+                    Ok(_) => schemas.push(schema),
+                    Err(errs) => {
+                        eprintln!("[AURORA]: {}", errs.to_pretty_string(&path.display().to_string(), &schema));
+                        std::process::exit(0)
+                    }
+                }
             }
         }
     }
