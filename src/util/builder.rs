@@ -17,7 +17,15 @@ impl Builder {
         }
     }
     pub fn add_datasource(&mut self, source: datamodel::Datasource) {
-        self.config.datasources.push(source);
+        
+        if self.config.datasources.len() > 0 {
+            let old = datamodel::mcf::render_sources_to_json(&[source]);
+            let new = datamodel::mcf::render_sources_to_json(&self.config.datasources);
+            if old != new {
+                self.config.datasources[0].active_connector = source.active_connector;
+            }
+        }
+        // self.config.datasources.push(source);
     }
 
     pub fn print(&self) {
