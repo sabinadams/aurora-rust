@@ -1,5 +1,6 @@
 mod util;
 mod vars;
+
 fn main() {
     // Read the config file
     let aurora_config = util::file::read_aurora_config().unwrap_or_else(|_err| {
@@ -14,9 +15,10 @@ fn main() {
         std::process::exit(0)
     }
 
-    
     util::datamodel::consolidate_schemas(
-        schemas.iter().map(|x| datamodel::parse_schema(x).unwrap()).collect()
+        schemas
+            .iter()
+            .map(|x| datamodel::parse_schema(x).unwrap())
+            .collect(),
     );
-
 }

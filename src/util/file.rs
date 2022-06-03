@@ -32,12 +32,15 @@ impl From<std::io::Error> for MyError {
     }
 }
 
+/// Reads in the aurora.config.json file and parses it to JSON
 pub fn read_aurora_config() -> Result<AuroraConfig, MyError> {
     let raw = read_to_string(CONFIG_PATH)?;
     let test = from_str::<AuroraConfig>(&raw)?;
     Ok(test)
 }
 
+/// Takes a set of paths/blobs and reads all of the prisma files they point to or that match the blob pattern.
+/// <br/> This function also ensures each schema is valid, otherwise it throws an error.
 pub fn read_all_schemas(paths: Vec<String>) -> Vec<String> {
     let mut schemas: Vec<String> = vec![];
 
