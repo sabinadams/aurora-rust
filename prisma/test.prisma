@@ -8,12 +8,18 @@ generator js2 {
     previewFeatures = ["extendedIndexes"]
 }
 
+enum Test {
+    User
+    Admin
+    Guest
+}
+
 datasource db {
     provider = "mysql"
     url      = "mysql://"
 }
 
-model Test {
+model Test2 {
     id      String @id @map("_id")
     content Json   @default("{}") @db.Json
 }

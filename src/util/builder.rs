@@ -36,21 +36,51 @@ impl Builder {
             Ok(())
         }
     }
-    
-    /// Registers a generator. It takes in a generator. If another generator exists already with exactly the same config, it does nothing. 
+
+    /// Registers a generator. It takes in a generator. If another generator exists already with exactly the same config, it does nothing.
     /// Otherwise it will add it.
     pub fn add_generator(&mut self, generator: datamodel::Generator) -> () {
-        let generators: Vec<String> = self.config.generators.clone().into_iter().map(|gen| {
-            datamodel::mcf::generators_to_json(&[gen]).as_str().to_owned()
-        }).collect();
-        
-        if !generators.contains(&datamodel::mcf::generators_to_json(&[generator.clone()]).as_str().to_owned()) {
+        let generators: Vec<String> = self
+            .config
+            .generators
+            .clone()
+            .into_iter()
+            .map(|gen| {
+                datamodel::mcf::generators_to_json(&[gen])
+                    .as_str()
+                    .to_owned()
+            })
+            .collect();
+
+        if !generators.contains(
+            &datamodel::mcf::generators_to_json(&[generator.clone()])
+                .as_str()
+                .to_owned(),
+        ) {
             self.config.generators.push(generator);
         }
     }
 
     pub fn add_enum(&mut self, schema_enum: datamodel::dml::Enum) {
-        
+        // Get the position of a matching enum
+        let enum_index = self
+            .datamodel
+            .enums
+            .iter()
+            .position(|enm| enm.name == schema_enum.name);
+
+        if enum_index.is_none() {
+            self.datamodel.enums.push(schema_enum);
+        } else {
+            for value in schema_enum.values {
+                if self.datamodel.enums[enum_index.unwrap()]
+                    .find_value(&value.name)
+                    .is_none()
+                {
+                    self.datamodel.enums[enum_index.unwrap()].add_value(value);
+                }
+            }
+        }
     }
 
     pub fn print(&self) {
@@ -58,7 +88,10 @@ impl Builder {
     }
 
     pub fn render(self) -> (datamodel::Configuration, datamodel::dml::Datamodel) {
-        println!("{}", datamodel::render_datamodel_and_config_to_string(&self.datamodel, &self.config));
+        println!(
+            "{}",
+            datamodel::render_datamodel_and_config_to_string(&self.datamodel, &self.config)
+        );
         (self.config, self.datamodel)
     }
 }

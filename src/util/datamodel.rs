@@ -33,7 +33,6 @@ pub fn consolidate_schemas(
         // Register any composite type definitions
 
         // Register any model definitions
-
     }
 
     builder.print();

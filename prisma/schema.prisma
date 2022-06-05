@@ -17,3 +17,9 @@ model Post {
     id      String @id @map("_id")
     content Json   @default("{}") @db.Json
 }
+
+enum Test {
+    User
+    Admin
+    Guest
+}
