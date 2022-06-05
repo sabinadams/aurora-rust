@@ -61,6 +61,8 @@ impl Builder {
         }
     }
 
+    /// Registers an enum. If an existing enum's name matches the one provided,
+    /// the values of the enum will be merged, resulting in one enum with both values.
     pub fn add_enum(&mut self, schema_enum: datamodel::dml::Enum) {
         // Get the position of a matching enum
         let enum_index = self
