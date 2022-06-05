@@ -3,6 +3,11 @@ generator js {
     previewFeatures = ["extendedIndexes"]
 }
 
+generator js2 {
+    provider        = "prisma-client-js"
+    previewFeatures = ["extendedIndexes"]
+}
+
 datasource db {
     provider = "mysql"
     url      = "mysql://"

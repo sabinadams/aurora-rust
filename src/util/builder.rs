@@ -36,6 +36,22 @@ impl Builder {
             Ok(())
         }
     }
+    
+    /// Registers a generator. It takes in a generator. If another generator exists already with exactly the same config, it does nothing. 
+    /// Otherwise it will add it.
+    pub fn add_generator(&mut self, generator: datamodel::Generator) -> () {
+        let generators: Vec<String> = self.config.generators.clone().into_iter().map(|gen| {
+            datamodel::mcf::generators_to_json(&[gen]).as_str().to_owned()
+        }).collect();
+        
+        if !generators.contains(&datamodel::mcf::generators_to_json(&[generator.clone()]).as_str().to_owned()) {
+            self.config.generators.push(generator);
+        }
+    }
+
+    pub fn add_enum(&mut self, schema_enum: datamodel::dml::Enum) {
+        
+    }
 
     pub fn print(&self) {
         println!("{:?}", self.config.datasources);
