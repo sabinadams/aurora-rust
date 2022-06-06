@@ -39,7 +39,7 @@ impl Builder {
 
     /// Registers a generator. It takes in a generator. If another generator exists already with exactly the same config, it does nothing.
     /// Otherwise it will add it.
-    pub fn add_generator(&mut self, generator: datamodel::Generator) -> () {
+    pub fn add_generator(&mut self, generator: datamodel::Generator) {
         let generators: Vec<String> = self
             .config
             .generators
@@ -84,6 +84,24 @@ impl Builder {
             }
         }
     }
+
+    pub fn add_composite_type(&mut self, composite: datamodel::dml::CompositeType) {
+        // Get the position of a matching enum
+        let composite_index = self
+            .datamodel
+            .composite_types
+            .iter()
+            .position(|cmp| cmp.name == composite.name);
+
+        if composite_index.is_none() {
+            self.datamodel.composite_types.push(composite);
+        } else {
+            let existing_fields = &self.datamodel.composite_types[composite_index.unwrap()];
+            let new_fields = &composite.fields;
+        }
+    }
+
+    fn consolidate_attributes() {}
 
     pub fn print(&self) {
         println!("{:?}", self.config.datasources);

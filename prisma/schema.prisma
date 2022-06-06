@@ -9,8 +9,8 @@ generator js2 {
 }
 
 datasource db {
-    provider = "mysql"
-    url      = "mysql://"
+    provider = "mongodb"
+    url      = "mongodb://"
 }
 
 model Post {
@@ -22,4 +22,8 @@ enum Test {
     User
     Admin
     Guest
+}
+
+type TestType {
+    name String
 }

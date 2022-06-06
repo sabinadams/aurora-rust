@@ -30,7 +30,11 @@ pub fn consolidate_schemas(
         for schema_enum in schema.1.enums {
             builder.add_enum(schema_enum);
         }
+
         // Register any composite type definitions
+        for composite in schema.1.composite_types {
+            builder.add_composite_type(composite);
+        }
 
         // Register any model definitions
     }
