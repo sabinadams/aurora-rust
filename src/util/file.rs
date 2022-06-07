@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::from_str;
 use std::fs::read_to_string;
 use std::io;
-use crate::util;
+use crate::model_helpers;
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AuroraConfig {
     pub files: Vec<String>,
@@ -41,8 +41,8 @@ pub fn read_aurora_config() -> Result<AuroraConfig, MyError> {
 
 /// Takes a set of paths/blobs and reads all of the prisma files they point to or that match the blob pattern.
 /// <br/> This function also ensures each schema is valid, otherwise it throws an error.
-pub fn read_all_schemas(paths: Vec<String>) -> Vec<String> {
-    let mut schemas: Vec<String> = vec![];
+pub fn read_all_schemas(paths: Vec<String>) -> Vec<(std::path::PathBuf, std::string::String)> {
+    let mut schemas: Vec<(std::path::PathBuf, std::string::String)> = vec![];
 
     for path in paths {
         for entry in glob(&path).unwrap_or_else(|_err| {
@@ -54,8 +54,11 @@ pub fn read_all_schemas(paths: Vec<String>) -> Vec<String> {
                     eprintln!("Could not read the schema at {}", path.display());
                     std::process::exit(0)
                 });
-                match util::datamodel::validate_schema(schema.clone()) {
-                    Ok(_) => schemas.push(schema),
+                match model_helpers::validate_schema(schema.clone()) {
+                    Ok(_) => schemas.push((
+                        path,
+                        schema
+                    )),
                     Err(errs) => {
                         eprintln!("[AURORA]: {}", errs.to_pretty_string(&path.display().to_string(), &schema));
                         std::process::exit(0)

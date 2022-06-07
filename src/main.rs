@@ -1,5 +1,8 @@
 mod util;
 mod vars;
+mod model_helpers;
+use datamodel;
+mod builder;
 
 fn main() {
     // Read the config file
@@ -15,10 +18,15 @@ fn main() {
         std::process::exit(0)
     }
 
-    util::datamodel::consolidate_schemas(
+    model_helpers::consolidate_schemas(
         schemas
             .iter()
-            .map(|x| datamodel::parse_schema(x).unwrap())
-            .collect(),
+            .map(|x| {
+                (
+                    x.0.clone(),
+                    datamodel::parse_schema_ast(&x.1).unwrap()
+                )
+            })
+            .collect(),      
     );
 }
