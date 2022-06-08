@@ -19,13 +19,13 @@ pub fn consolidate_schemas(
         schema.1.iter_tops().for_each(|top| {
             match top.1 {
                 Top::Source(source) => {
-                    builder.add_datasource(source.to_owned(), schema.0.clone())
+                    builder.add_datasource(source, schema.0.clone())
                         .unwrap_or_else(|_| {
                             exit(0)
                         });
                 }
                 Top::Generator(generator) => {
-                    builder.add_generator(generator.to_owned(), schema.0.clone())
+                    builder.add_generator(generator, schema.0.clone())
                         .unwrap_or_else(|_| {
                             exit(0)
                         });

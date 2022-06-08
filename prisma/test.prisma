@@ -15,8 +15,8 @@ enum Test {
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = "mongodb://"
+    provider = "mysql"
+    url      = "mysql://"
 }
 
 model Test2 {
